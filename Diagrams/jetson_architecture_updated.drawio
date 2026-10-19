@@ -1,0 +1,226 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="updated-arch">
+    <mxGraphModel dx="1062" dy="723" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- SENSOR LAYER -->
+        <mxCell id="sensor-label" parent="1" value="SENSOR LAYER" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="70" width="80" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="camera" parent="1" value="Camera&lt;div&gt;(video)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="80" y="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lidar" parent="1" value="LiDAR&lt;div&gt;(Point clouds)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="280" y="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="imu" parent="1" value="IMU/GPS&lt;div&gt;(Motion)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="500" y="100" as="geometry" />
+        </mxCell>
+
+        <!-- Edges from sensors to fusion -->
+        <mxCell id="edge-cam-fusion" parent="1" source="camera" target="sensor-fusion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge-lidar-fusion" parent="1" source="lidar" target="sensor-fusion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="edge-imu-fusion" parent="1" source="imu" target="sensor-fusion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SENSOR FUSION (KEY ADDITION) -->
+        <mxCell id="fusion-label" parent="1" value="PERCEPTION LAYER" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="205" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sensor-fusion" parent="1" value="Sensor Fusion&lt;div&gt;(Unified world model)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF4E6;strokeColor=#FF9800;" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="210" as="geometry" />
+        </mxCell>
+
+        <!-- Object Detection from fusion -->
+        <mxCell id="object-detect" parent="1" value="Object detection&lt;div&gt;(YOLO, TensorRT)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="120" x="80" y="310" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-fusion-detect" parent="1" source="sensor-fusion" target="object-detect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Localization from fusion -->
+        <mxCell id="localization" parent="1" value="Localization&lt;div&gt;(Where am I?)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="120" x="470" y="310" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-fusion-local" parent="1" source="sensor-fusion" target="localization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- JETSON COMPUTE -->
+        <mxCell id="jetson-label" parent="1" value="COMPUTE CORE" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="440" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="jetson" parent="1" value="Jetson Compute&lt;div&gt;(GPU, CPU, ROS)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;strokeWidth=2;" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="420" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-detect-jetson" parent="1" source="object-detect" target="jetson" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-local-jetson" parent="1" source="localization" target="jetson" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- PLANNING LAYER -->
+        <mxCell id="plan-label" parent="1" value="PLANNING LAYER" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="560" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="path-plan" parent="1" value="Path Planning&lt;div&gt;(Route gen)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="80" y="540" as="geometry" />
+        </mxCell>
+
+        <mxCell id="motion-plan" parent="1" value="Motion Planning&lt;div&gt;(Trajectory)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="280" y="540" as="geometry" />
+        </mxCell>
+
+        <mxCell id="behavior-plan" parent="1" value="Behavior Planning&lt;div&gt;(Decisions)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="500" y="540" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-jetson-path" parent="1" source="jetson" target="path-plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-jetson-motion" parent="1" source="jetson" target="motion-plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-jetson-behavior" parent="1" source="jetson" target="behavior-plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FEEDBACK LOOP 1: Localization back to Planning (dashed) -->
+        <mxCell id="feedback-state" parent="1" source="localization" target="motion-plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#FF6B6B;" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="430" />
+              <mxPoint x="330" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- FEEDBACK LOOP 2: Detections back to Behavior (dashed) -->
+        <mxCell id="feedback-detect" parent="1" source="object-detect" target="behavior-plan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#FF6B6B;" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="500" />
+              <mxPoint x="550" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CONTROL LAYER -->
+        <mxCell id="ctrl-label" parent="1" value="CONTROL LAYER" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="680" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trajectory-track" parent="1" value="Trajectory Tracking&lt;div&gt;(Compute commands)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#FF9800;" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="660" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-plan-track" parent="1" source="path-plan" target="trajectory-track" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-motion-track" parent="1" source="motion-plan" target="trajectory-track" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-behavior-track" parent="1" source="behavior-plan" target="trajectory-track" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- VEHICLE INTERFACE (split from control) -->
+        <mxCell id="iface-label" parent="1" value="VEHICLE INTERFACE" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="795" width="120" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="can-encoder" parent="1" value="CAN Bus Encoder&lt;div&gt;(Send to vehicle)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#FF9800;" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="775" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-track-can" parent="1" source="trajectory-track" target="can-encoder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- OUTPUTS -->
+        <mxCell id="out-label" parent="1" value="PHYSICAL OUTPUTS" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="20" y="900" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="steering" parent="1" value="Steering&lt;div&gt;(wheel angle)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="80" y="880" as="geometry" />
+        </mxCell>
+
+        <mxCell id="engine" parent="1" value="Engine/Motor&lt;div&gt;(speed)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="280" y="880" as="geometry" />
+        </mxCell>
+
+        <mxCell id="brake" parent="1" value="Braking&lt;div&gt;(decelerate)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry height="60" width="100" x="470" y="880" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-can-steering" parent="1" source="can-encoder" target="steering" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-can-engine" parent="1" source="can-encoder" target="engine" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-can-brake" parent="1" source="can-encoder" target="brake" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SAFETY MONITOR (parallel) -->
+        <mxCell id="safe-label" parent="1" value="SAFETY MONITOR" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="650" y="440" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="safety" parent="1" value="Safety Layer&lt;div&gt;Watchdog timers&lt;/div&gt;&lt;div&gt;Sensor health&lt;/div&gt;&lt;div&gt;Hard limits&lt;/div&gt;&lt;div&gt;E-stop logic&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#D32F2F;strokeWidth=2;" vertex="1">
+          <mxGeometry height="90" width="120" x="660" y="410" as="geometry" />
+        </mxCell>
+
+        <!-- Safety receives from key components -->
+        <mxCell id="edge-jetson-safety" parent="1" source="jetson" target="safety" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D32F2F;" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-can-safety" parent="1" source="can-encoder" target="safety" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D32F2F;" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="805" />
+              <mxPoint x="620" y="805" />
+              <mxPoint x="620" y="455" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" parent="1" value="Solid arrows: data flow | Dashed arrows (red): feedback loops for closed-loop control" style="text;html=1;fontSize=9;fillColor=none;strokeColor=none;" vertex="1">
+          <mxGeometry x="50" y="1020" width="400" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

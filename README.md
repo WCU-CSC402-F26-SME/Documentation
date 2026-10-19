@@ -1,2 +1,2 @@
 # Documentation
-General project documentation.
+Repository for documentation such as trade studies, sprints, and retrospectives. 
